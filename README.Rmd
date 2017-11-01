@@ -1,0 +1,10 @@
+# Course diary
+
+First I got a GitHub account so I could work with the data provided.
+With the GitHub I started the IODS Project template
+Then I downloaded the GitHub for desktop so I can work using Rstudio.
+In Rstudy I modify the first chapter according to the instructions provided (write something about the course)
+Then I modify the index file and added my name to it.
+Finally I modify chapter 2 and uploaded everything to GitHub. 
+
+https://gonzalodqa.github.io/IODS-project/
