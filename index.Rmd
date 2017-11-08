@@ -1,6 +1,6 @@
 ---
 title: "IODS course project"
-author: Gonzalo de Quesada
+author: "Gonzalo de Quesada""
 output:
   html_document:
     theme: cosmo
