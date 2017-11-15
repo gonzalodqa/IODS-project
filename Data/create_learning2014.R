@@ -13,6 +13,8 @@ dim(learning2014)
 # look at the structure of the data
 str(learning2014)
 
+#Data contains 183 obbesvations and 63 variables
+
 library(dplyr)
 
 # Combine deep, stra and surf
@@ -56,3 +58,25 @@ str(learning2014col)
 head(learning2014col)
 
 read.csv("learning2014.csv", header = TRUE)
+
+library(ggplot2)
+
+library(GGally)
+
+p <- ggpairs(learning2014col, mapping = aes(col=gender), lower=list(combo=wrap("facethist", bins=20)))
+
+p
+
+model <- lm(Points ~ Attitude + stra + surf, learning2014col)
+
+model
+
+model1 <- lm(Points ~ Attitude, learning2014col)
+
+model1
+
+plot(model1, 1)
+
+plot(model1, 2)
+
+plot(model1, 5)
