@@ -1,0 +1,84 @@
+---
+title: "Chapter 2. Regression and model validation"
+author: "Gonzalo"
+date: "15 de noviembre de 2017"
+output: html_document
+---
+Data
+
+Our original data
+
+learning2014col <- read("C:/Users/D E L L/Documents/GitHub/IODS-project/Data")
+ dim(learning2014col)
+ str(learning2014col)
+ 
+ the data have 7 variables:
+ Gender: It has 2 levels: M for male, F for female
+
+Age: age of the students.
+
+Attitude: attitude towards statistics.
+
+Deep: deep approach learning and it is a combination of variables including: seeking meaning, relating ideas and use of evidence. This variables measure sto what extent the student has the intention to maximize understanding, with a true commitment to learning.
+
+Stra: strategic approach and it is a combination of variables including: organized studying and time management. This variables measures to what extent the students organize their studying
+
+Surf: surface approach learning and it is a combination of variables including: lack of purpose, unrelated memorising and syllabus-boundness.This variable measures to what extent the student memorizes without understanding, with a serious lack of personal engagement in the learning process.
+
+Points: the exam points that students obtained. 
+
+for a graphic overviwe we will use ggplot2 library because it creates scatter plots and correlation value. the mapping describes the aesthetic parameters and the colour between male and female.
+
+p <- ggpairs(learning2014col, mapping = aes(col=gender), lower=list(combo=wrap("facethist", bins=20)))
+
+p
+
+using this model we choose three variables as explanatory variables (surf, stra, attitude) of the dependent variable (exam points)
+
+model <- lm(Points ~ Attitude + stra + surf, learning2014col)
+
+model
+
+the output shows the t values, the standart error and p values.
+
+the model with only one variable (attitude)
+
+model1 <- lm(Points ~ Attitude, learning2014col)
+
+model1
+
+residual vs fitted values 
+
+plot(model1, 1)
+
+normal qq-plot
+
+plot(model1, 2)
+
+residual vs lererage
+
+plot(model1, 5)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
