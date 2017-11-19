@@ -5,10 +5,12 @@ Data
 Our original data
 
 
-```{original data}
-learning2014col <- read("C:/Users/D E L L/Documents/GitHub/IODS-project/Data")
-dim(learning2014col)
+```{r,read}
+learning2014col <- read.csv("C:/Users/D E L L/Documents/GitHub/IODS-project/Data/learning2014.csv")
 str(learning2014col)
+```
+```{r, dim}
+dim(learning2014col)
 ```
 
 the data have 7 variables:
@@ -29,14 +31,14 @@ Points: the exam points that students obtained.
 for a graphic overviwe we will use ggplot2 library because it creates scatter plots and correlation value. the mapping describes the aesthetic parameters and the colour between male and female.
 
 
-```{plot}
+```{r, ggpairs}
 p <- ggpairs(learning2014col, mapping = aes(col=gender), lower=list(combo=wrap("facethist", bins=20)))
 p
 ```
 
 using this model we choose three variables as explanatory variables (surf, stra, attitude) of the dependent variable (exam points)
 
-```{model}
+```{r, lm}
 model <- lm(Points ~ Attitude + stra + surf, learning2014col)
 model
 ```
@@ -44,20 +46,20 @@ the output shows the t values, the standart error and p values.
 
 the model with only one variable (attitude)
 
-```{model1}
+```{r, lmpoints}
 model1 <- lm(Points ~ Attitude, learning2014col)
 model1
 ```
 ## residual vs fitted values 
-```{plot}
+```{r, plot}
 plot(model1, 1)
 ```
 ## normal qq-plot
-```{plot}
+```{r, plot}
 plot(model1, 2)
 ```
 ## residual vs lererage
-```{plot}
+```{r, plot}
 plot(model1, 5)
 ```
 
