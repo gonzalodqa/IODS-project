@@ -1,6 +1,6 @@
 
-# IODS Project
+# About the project
 
-The course focuses on the basic of open data including the use of github and Rstudio.
+I enroll the course to learn the basics of open data sciences to implement it on my thesis
 
-https://github.com/Gonzadqa/IODS-project
+https://github.com/gonzalodqa/IODS-project
