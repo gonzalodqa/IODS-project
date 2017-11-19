@@ -1,9 +1,5 @@
----
-title: "Chapter 2. Regression and model validation"
-author: "Gonzalo"
-date: "15 de noviembre de 2017"
-output: html_document
----
+## "Chapter 2. Regression and model validation"
+
 Data
 
 Our original data
