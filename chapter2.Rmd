@@ -29,7 +29,11 @@ Surf: surface approach learning and it is a combination of variables including: 
 Points: the exam points that students obtained. 
 
 for a graphic overviwe we will use ggplot2 library because it creates scatter plots and correlation value. the mapping describes the aesthetic parameters and the colour between male and female.
+```{r, library}
+library(ggplot2)
 
+library(GGally)
+```
 
 ```{r, ggpairs}
 p <- ggpairs(learning2014col, mapping = aes(col=gender), lower=list(combo=wrap("facethist", bins=20)))
@@ -55,11 +59,11 @@ model1
 plot(model1, 1)
 ```
 ## normal qq-plot
-```{r, plot}
+```{r, plot1}
 plot(model1, 2)
 ```
 ## residual vs lererage
-```{r, plot}
+```{r, plot2}
 plot(model1, 5)
 ```
 
