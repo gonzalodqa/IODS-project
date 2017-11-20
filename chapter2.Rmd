@@ -58,10 +58,12 @@ model1
 ```{r, plot}
 plot(model1, 1)
 ```
+
 ## normal qq-plot
 ```{r, plot1}
 plot(model1, 2)
 ```
+
 ## residual vs lererage
 ```{r, plot2}
 plot(model1, 5)
