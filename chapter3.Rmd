@@ -1,0 +1,217 @@
+---
+title: "Chapter 3. Logistic regression"
+author: "Gonzalo de Quesada"
+date: "21 de noviembre de 2017"
+output: html_document
+---
+In this chapter we will analyse the relations between high/low alcohol consumption, and the other variables using logistic regressions.
+
+## Data description
+
+The data was obtained from the Machine Learning Repository. It contains 2 datasets, student performance in mathematics and in portuguese. 
+
+the data have 35 variables and 382 observations.amongs this we can find sex, grades, school, age, family size, job, address, etc.
+
+We will analyse the high consumption of alcohol among students.
+
+```{r, alc}
+alc <- read.table("C:/Users/D E L L/Documents/GitHub/IODS-project/Data/alc.csv", header = TRUE, sep = ",")
+
+library(dplyr)
+glimpse(alc)
+```
+
+## Hypothesis (4 variables)
+
+*Failures: Positive correlation, The more alcohol the more failures.
+
+*Absences: Positive correlation, the more alcohol consumption the more absences.
+
+*Final Grades: Negative correlation, higher alcohol consumption equals lower grades.
+
+*Study time: Negative correlation, higher alcohol consumption, less study time.
+
+## Explore the variables and their relationships with alcohol consumption
+
+Bar plot
+
+```{r, bar plot}
+chosen_variables <- subset(alc, select = c("high_use", "failures", "absences", "G3", "studytime"))
+library(tidyr)
+library(ggplot2)
+gather(chosen_variables) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar()
+```
+
+As seen in the plot absences, failure and grades don´t seem to follow the hypotesis. But as we can see in the variable studytime the students with more study time are the ones thta consume less alcohol.
+
+```{r, g1}
+g1 <- ggplot(alc, aes(x = high_use))
+g1 + geom_bar() + facet_wrap("studytime")
+```
+
+Box plot
+
+We will explore the variable grades by the gender of the students.
+
+```{r, g2}
+g2 <- ggplot(alc, aes(x= high_use, y = G3, col = sex))
+g2 + geom_boxplot() + ylab("Grades") + ggtitle("Grades and alcohol consumption by gender")
+```
+
+Cross-tabulation
+
+Here we can explore the numerical values.
+
+First we will start with the variable grades. As asume in the hypotesis we see that the students with higher alcohol consumption show less average grades than the other students.
+
+```{r, alc1}
+alc %>% group_by (high_use) %>% summarise (count = n(), mean_grade = mean (G3))
+```
+
+We now compare grades, absences and failure, and find out that the students with high alcohol consumption have higher average values in this variables
+
+```{r, alc2}
+alc %>% group_by (high_use) %>% summarise (count = n(), mean_grade = mean (G3), mean_absences = mean(absences), mean_failures = mean(failures))
+```
+
+If we add study time we can see that students with high alcohol consumption show less study time than their conterparts.
+
+```{r, alc3}
+alc %>% group_by (high_use) %>% summarise (count = n(), mean_grade = mean (G3), mean_absences = mean(absences), mean_failures = mean(failures), mean_studytime = mean(studytime))
+```
+
+Next we explore grades and study time, and as shown by in the table we can see that students with high alcohol consumption and low study time present lower grades. But surprisingly the students with high alcohol consumption and high study time have better average grades than the other students.
+
+```{r, alc4}
+alc %>% group_by (studytime, high_use) %>% summarise (count = n(), mean_grade = mean (G3))
+```
+
+## Logistic regression
+
+Using our selected variables we can create a model to test our hypotesis.
+
+```{r, m}
+m <- glm(high_use ~ studytime + absences + failures + G3, data = alc, family = "binomial")
+summary(m)
+cbind(coef(m) %>% exp(), confint(m) %>% exp())
+```
+
+Using odd ratios we can see that, according to our hypotesis study time have a negative relation. with 1 more study time value the student are 0.62 more likely to have high alcohol consumption.
+In the case of absences the students that show the more are 1.08 times more likely to have high alcohol consumption.
+In the case of failures the students with more failures are 1.34 times more likely to have high alcohol consumption.
+Lastly the students with better grades are 0.97 more likely to have high alcohol consumption.
+
+```{r, prob}
+probabilities <- predict(m, type = "response")
+alc <- mutate(alc, probability = probabilities)
+alc <- mutate(alc, prediction = probability > 0.5)
+table(high_use = alc$high_use, prediction = alc$prediction) 
+table(high_use = alc$high_use, prediction = alc$prediction) %>% prop.table() %>% addmargins()
+```
+
+```{r, g3}
+g <- ggplot(alc, aes(x=probability, y=high_use, col=prediction))
+
+g + geom_point()
+```
+
+Using this model we can predict that 6% of the cases will show a high consumption as a real value, 24% of the cases will appear as non high consumption while they really are, 4% will show as high alcohol cinsumption while they are not and 66% will appear as non high consumption as real values.
+this means that the variable used are not accurate enought to predict high consumption in students. This is confirmed with the next formula which tell us that 28% of our predictions are wrong. 
+
+```{r, pred}
+loss_func <- function(class, prob){
+  n_wrong <- abs(class - prob) > 0.5
+  mean(n_wrong)
+}
+loss_func(class=alc$high_use, prob=alc$probability)
+```
+
+## Cross validation
+
+Using a 10 fold cross validation on the model we get that 29% of our predictions are wrong
+
+```{r, 10fold}
+library(boot)
+cv <- cv.glm(data=alc, cost=loss_func, glmfit = m, K=10)
+cv$delta[1]
+```
+
+## BONUS
+
+Model with 7 variables
+
+```{r, m2}
+m2 <- glm(high_use ~ sex + failures + absences + G3 + romantic + studytime + traveltime, data = alc, family = "binomial")
+summary(m2)
+probabilities2 <- predict(m2, type = "response")
+alc <- mutate(alc, probability2 = probabilities2)
+alc <- mutate(alc, prediction2 = probability2 > 0.5)
+loss_func(class=alc$high_use, prob=alc$probability2)
+cv <- cv.glm(data=alc, cost=loss_func, glmfit = m2, K=10)
+cv$delta[1]
+```
+
+Model with 6 variables
+
+```{r, m3}
+m3 <- glm(high_use ~ sex + failures + absences + G3 + studytime + traveltime, data = alc, family = "binomial")
+summary(m3)
+probabilities3 <- predict(m3, type = "response")
+alc <- mutate(alc, probability3 = probabilities3)
+alc <- mutate(alc, prediction3 = probability3 > 0.5)
+loss_func(class=alc$high_use, prob=alc$probability3)
+cv <- cv.glm(data=alc, cost=loss_func, glmfit = m3, K=10)
+cv$delta[1]
+```
+
+Model with 5 variables
+
+```{r, m4}
+m4 <- glm(high_use ~ sex + failures + absences + G3 + traveltime, data = alc, family = "binomial")
+summary(m4)
+probabilities4 <- predict(m4, type = "response")
+alc <- mutate(alc, probability4 = probabilities4)
+alc <- mutate(alc, prediction4 = probability4 > 0.5)
+loss_func(class=alc$high_use, prob=alc$probability4)
+cv <- cv.glm(data=alc, cost=loss_func, glmfit = m4, K=10)
+cv$delta[1]
+```
+
+Model with 4 variables
+
+```{r, m5}
+m5 <- glm(high_use ~ sex + failures + absences + G3, data = alc, family = "binomial")
+summary(m5)
+probabilities5 <- predict(m5, type = "response")
+alc <- mutate(alc, probability5 = probabilities5)
+alc <- mutate(alc, prediction5 = probability5 > 0.5)
+loss_func(class=alc$high_use, prob=alc$probability5)
+cv <- cv.glm(data=alc, cost=loss_func, glmfit = m5, K=10)
+cv$delta[1]
+```
+
+Model with 3 variables
+
+```{r, m6}
+m6 <- glm(high_use ~ sex + failures + G3, data = alc, family = "binomial")
+summary(m6)
+probabilities6 <- predict(m6, type = "response")
+alc <- mutate(alc, probability6 = probabilities6)
+alc <- mutate(alc, prediction6 = probability6 > 0.5)
+loss_func(class=alc$high_use, prob=alc$probability6)
+cv <- cv.glm(data=alc, cost=loss_func, glmfit = m6, K=10)
+cv$delta[1]
+```
+
+Model with 2 variables
+
+```{r, m7}
+m7 <- glm(high_use ~ sex + failures, data = alc, family = "binomial")
+summary(m7)
+probabilities7 <- predict(m7, type = "response")
+alc <- mutate(alc, probability7 = probabilities7)
+alc <- mutate(alc, prediction7 = probability7 > 0.5)
+loss_func(class=alc$high_use, prob=alc$probability7)
+cv <- cv.glm(data=alc, cost=loss_func, glmfit = m7, K=10)
+cv$delta[1]
+```
