@@ -428,7 +428,7 @@ loss_func(class=alc$high_use, prob=alc$probability)</code></pre>
 <pre class="r"><code>library(boot)
 cv &lt;- cv.glm(data=alc, cost=loss_func, glmfit = m, K=10)
 cv$delta[1]</code></pre>
-<pre><code>## [1] 0.2853403</code></pre>
+<pre><code>## [1] 0.2879581</code></pre>
 </div>
 <div id="bonus" class="section level2">
 <h2>BONUS</h2>
@@ -510,7 +510,7 @@ loss_func(class=alc$high_use, prob=alc$probability3)</code></pre>
 <pre><code>## [1] 0.2539267</code></pre>
 <pre class="r"><code>cv &lt;- cv.glm(data=alc, cost=loss_func, glmfit = m3, K=10)
 cv$delta[1]</code></pre>
-<pre><code>## [1] 0.2617801</code></pre>
+<pre><code>## [1] 0.2643979</code></pre>
 <p>Model with 5 variables</p>
 <pre class="r"><code>m4 &lt;- glm(high_use ~ sex + failures + absences + G3 + traveltime, data = alc, family = &quot;binomial&quot;)
 summary(m4)</code></pre>
@@ -548,7 +548,7 @@ loss_func(class=alc$high_use, prob=alc$probability4)</code></pre>
 <pre><code>## [1] 0.2486911</code></pre>
 <pre class="r"><code>cv &lt;- cv.glm(data=alc, cost=loss_func, glmfit = m4, K=10)
 cv$delta[1]</code></pre>
-<pre><code>## [1] 0.2617801</code></pre>
+<pre><code>## [1] 0.2539267</code></pre>
 <p>Model with 4 variables</p>
 <pre class="r"><code>m5 &lt;- glm(high_use ~ sex + failures + absences + G3, data = alc, family = &quot;binomial&quot;)
 summary(m5)</code></pre>
@@ -621,7 +621,7 @@ loss_func(class=alc$high_use, prob=alc$probability6)</code></pre>
 <pre><code>## [1] 0.2879581</code></pre>
 <pre class="r"><code>cv &lt;- cv.glm(data=alc, cost=loss_func, glmfit = m6, K=10)
 cv$delta[1]</code></pre>
-<pre><code>## [1] 0.2931937</code></pre>
+<pre><code>## [1] 0.2984293</code></pre>
 <p>Model with 2 variables</p>
 <pre class="r"><code>m7 &lt;- glm(high_use ~ sex + failures, data = alc, family = &quot;binomial&quot;)
 summary(m7)</code></pre>
