@@ -4,8 +4,8 @@ author: "Gonzalo de Quesada"
 date: "21 de noviembre de 2017"
 output: html_document
 ---
-## "Chapter 3. Logistic regfression
-"
+## "Chapter 3. Logistic regfression""
+
 In this chapter we will analyse the relations between high/low alcohol consumption, and the other variables using logistic regressions.
 
 ## Data description

@@ -147,7 +147,7 @@ $(document).ready(function () {
 <li><a href="#residual-vs-fitted-values">residual vs fitted values</a></li>
 <li><a href="#normal-qq-plot">normal qq-plot</a></li>
 <li><a href="#residual-vs-lererage">residual vs lererage</a></li>
-<li><a href="#chapter-3.-logistic-regfression">“Chapter 3. Logistic regfression”</a></li>
+<li><a href="#chapter-3.-logistic-regfression">“Chapter 3. Logistic regfression”&quot;</a></li>
 <li><a href="#data-description">Data description</a></li>
 <li><a href="#hypothesis-4-variables">Hypothesis (4 variables)</a></li>
 <li><a href="#explore-the-variables-and-their-relationships-with-alcohol-consumption">Explore the variables and their relationships with alcohol consumption</a></li>
@@ -233,7 +233,7 @@ model1</code></pre>
 <hr />
 </div>
 <div id="chapter-3.-logistic-regfression" class="section level2">
-<h2>“Chapter 3. Logistic regfression”</h2>
+<h2>“Chapter 3. Logistic regfression”&quot;</h2>
 <p>In this chapter we will analyse the relations between high/low alcohol consumption, and the other variables using logistic regressions.</p>
 </div>
 <div id="data-description" class="section level2">
@@ -428,7 +428,7 @@ loss_func(class=alc$high_use, prob=alc$probability)</code></pre>
 <pre class="r"><code>library(boot)
 cv &lt;- cv.glm(data=alc, cost=loss_func, glmfit = m, K=10)
 cv$delta[1]</code></pre>
-<pre><code>## [1] 0.2905759</code></pre>
+<pre><code>## [1] 0.2879581</code></pre>
 </div>
 <div id="bonus" class="section level2">
 <h2>BONUS</h2>
@@ -471,7 +471,7 @@ loss_func(class=alc$high_use, prob=alc$probability2)</code></pre>
 <pre><code>## [1] 0.2539267</code></pre>
 <pre class="r"><code>cv &lt;- cv.glm(data=alc, cost=loss_func, glmfit = m2, K=10)
 cv$delta[1]</code></pre>
-<pre><code>## [1] 0.2696335</code></pre>
+<pre><code>## [1] 0.2670157</code></pre>
 <p>Model with 6 variables</p>
 <pre class="r"><code>m3 &lt;- glm(high_use ~ sex + failures + absences + G3 + studytime + traveltime, data = alc, family = &quot;binomial&quot;)
 summary(m3)</code></pre>
@@ -510,7 +510,7 @@ loss_func(class=alc$high_use, prob=alc$probability3)</code></pre>
 <pre><code>## [1] 0.2539267</code></pre>
 <pre class="r"><code>cv &lt;- cv.glm(data=alc, cost=loss_func, glmfit = m3, K=10)
 cv$delta[1]</code></pre>
-<pre><code>## [1] 0.2696335</code></pre>
+<pre><code>## [1] 0.2670157</code></pre>
 <p>Model with 5 variables</p>
 <pre class="r"><code>m4 &lt;- glm(high_use ~ sex + failures + absences + G3 + traveltime, data = alc, family = &quot;binomial&quot;)
 summary(m4)</code></pre>
@@ -585,7 +585,7 @@ loss_func(class=alc$high_use, prob=alc$probability5)</code></pre>
 <pre><code>## [1] 0.2643979</code></pre>
 <pre class="r"><code>cv &lt;- cv.glm(data=alc, cost=loss_func, glmfit = m5, K=10)
 cv$delta[1]</code></pre>
-<pre><code>## [1] 0.2670157</code></pre>
+<pre><code>## [1] 0.2617801</code></pre>
 <p>Model with 3 variables</p>
 <pre class="r"><code>m6 &lt;- glm(high_use ~ sex + failures + G3, data = alc, family = &quot;binomial&quot;)
 summary(m6)</code></pre>
@@ -621,7 +621,7 @@ loss_func(class=alc$high_use, prob=alc$probability6)</code></pre>
 <pre><code>## [1] 0.2879581</code></pre>
 <pre class="r"><code>cv &lt;- cv.glm(data=alc, cost=loss_func, glmfit = m6, K=10)
 cv$delta[1]</code></pre>
-<pre><code>## [1] 0.3010471</code></pre>
+<pre><code>## [1] 0.2931937</code></pre>
 <p>Model with 2 variables</p>
 <pre class="r"><code>m7 &lt;- glm(high_use ~ sex + failures, data = alc, family = &quot;binomial&quot;)
 summary(m7)</code></pre>
