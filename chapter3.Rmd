@@ -44,7 +44,7 @@ library(ggplot2)
 gather(chosen_variables) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar()
 ```
 
-As seen in the plot absences, failure and grades don´t seem to follow the hypotesis. But as we can see in the variable studytime the students with more study time are the ones thta consume less alcohol.
+As seen in the plot absences, failure and grades don?t seem to follow the hypotesis. But as we can see in the variable studytime the students with more study time are the ones thta consume less alcohol.
 
 ```{r, g1}
 g1 <- ggplot(alc, aes(x = high_use))
