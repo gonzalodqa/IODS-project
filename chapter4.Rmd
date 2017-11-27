@@ -1,0 +1,119 @@
+---
+title: "Chapter 4. Clustering and classification"
+author: "Gonzalo de Quesada"
+date: "23 de noviembre de 2017"
+output: html_document
+---
+# "Chapter 4. Clustering and classification"
+
+## Clustering and classification
+
+We are working with the data set of the MASS library which contains information about the city of Boston.
+Exploring the data 
+
+```{r, data}
+library(MASS)
+summary(Boston)
+dim(Boston)
+str(Boston)
+```
+
+To analyse the data we will have to find the correlation within the variables. We will do this using a correlation matrix where the colors of the matrix explains the correlation, blue for positive and red for negative correlation. In the graph we can see that crime have a strong positive correlation with the index of accessibility to radial highways and the full-value property-tax rate per \$10,000.
+
+```{r, matrix}
+library(dplyr)
+library(corrplot)
+cor_matrix<-cor(Boston) %>% round(digits=2)
+cor_matrix
+corrplot(cor_matrix, method="circle", type="upper", cl.pos="b", tl.pos="d", tl.cex=0.6)
+```
+
+## dataset standarization
+
+We scaled the dataset so the standard deviation for al the variables is one and then create a new crime rate variable. then we proceed to replace the old crime variable with the scaled version.
+
+```{r, scale}
+boston_scaled <- scale(Boston)
+summary(boston_scaled)
+class(boston_scaled)
+boston_scaled <- as.data.frame(boston_scaled)
+bins <- quantile(boston_scaled$crim)
+crime <- cut(boston_scaled$crim, breaks = bins, include.lowest = TRUE, label=c("low","med_low", "med_high", "high"))
+table(crime)
+boston_scaled <- dplyr::select(boston_scaled, -crim)
+boston_scaled <- data.frame(boston_scaled, crime)
+```
+Then we divide the dataset randomly into train (80% of the data) and test (20% of the data) sets
+
+```{r, random}
+n <- nrow(boston_scaled)
+ind <- sample(n,  size = n * 0.8)
+train <- boston_scaled[ind,]
+test <- boston_scaled[-ind,]
+correct_classes <- test$crime
+test <- dplyr::select(test, -crime)
+```
+
+Using Linear discriminant analysis with crime rate as the target variable and the other variables as predictors
+
+```{r, lda}
+lda.fit <- lda(crime ~ . , data = train)
+lda.fit
+lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "red", tex = 0.75, choices = c(1,2)){
+  heads <- coef(x)
+  arrows(x0 = 0, y0 = 0, 
+         x1 = myscale * heads[,choices[1]], 
+         y1 = myscale * heads[,choices[2]], col=color, length = arrow_heads)
+  text(myscale * heads[,choices], labels = row.names(heads), 
+       cex = tex, col=color, pos=3)
+}
+classes <- as.numeric(train$crime)
+plot(lda.fit, dimen = 2, col=classes, pch=classes)
+lda.arrows(lda.fit, myscale = 2)
+```
+
+As seen in the plot the index of accessibility to radial highways is the most important predictor. Now we predict the classes
+
+```{r, class}
+lda.pred <- predict(lda.fit, newdata = test)
+table(correct = correct_classes, predicted = lda.pred$class)
+```
+
+The predictions show how the high crime rate is well predicted using this variables.
+
+## Distance calculation
+
+Now we scale the index of accessibility to radial highways.
+
+```{r,dist}
+data("Boston")
+boston_s <- scale(Boston)
+boston_s <- as.data.frame(boston_s)
+dist_eu <- dist(boston_s)
+summary(dist_eu)
+```
+
+Now we run the k-means on the dataset with four clusters. 
+
+```{r, cluster}
+km <-kmeans(boston_s, centers = 4)
+pairs(boston_s[6:10], col = km$cluster)
+```
+
+Using cluster sum of squares to calculate and visualize the optimal number of clusters
+
+```{r, css}
+library(ggplot2)
+set.seed(123)
+k_max <- 10
+twcss <- sapply(1:k_max, function(k){kmeans(boston_s, k)$tot.withinss})
+qplot(x = 1:k_max, y = twcss, geom = 'line')
+```
+
+We run the plot again using two clusters
+
+```{r, cluster2}
+library(GGally)
+km <-kmeans(boston_s, centers = 2)
+pairs(boston_s[6:10],col = km$cluster)
+```
