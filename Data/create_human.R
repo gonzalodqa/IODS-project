@@ -39,8 +39,10 @@ gii <- mutate(gii, lab_ratio=lab_f/lab_m)
 human <- inner_join(hd, gii, by = "country")
 str(human)
 dim(human)
+dim(human_)
+str(human_)
 
 # save data
 
-write.csv(human, file = "human.csv", row.names = FALSE)
+write.csv(human_, file = "human.csv", row.names = FALSE)
 

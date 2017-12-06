@@ -1,0 +1,26 @@
+---
+title: "Chapter 5: Dimensionality reduction techniques"
+author: "Gonzalo de Quesada"
+date: "4 de diciembre de 2017"
+output: html_document
+---
+
+# Chapter 5: Dimensionality reduction techniques
+
+The dataset was obtained from the United Nations Development Program.
+
+```{r, dat}
+human_ <- read.csv(file="C:/Users/D E L L/Documents/GitHub/IODS-project/Data/human_.csv")
+str(human_)
+```
+
+Now we vizualize the data using a correlation plot matrix
+
+```{r, cormat}
+library(dplyr)
+library(GGally)
+library(corrplot)
+ggpairs(human_)
+cor(human_) %>% corrplot
+```
+
