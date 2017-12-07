@@ -10,17 +10,61 @@ output: html_document
 The dataset was obtained from the United Nations Development Program.
 
 ```{r, dat}
-human_ <- read.csv(file="C:/Users/D E L L/Documents/GitHub/IODS-project/Data/human_.csv")
-str(human_)
+setwd("C:/Users/D E L L/Documents/GitHub/IODS-project/Data")
+human <- read.table("human.csv", header = TRUE, sep = ",")
+
+str(human)
+dim(human)
 ```
 
 Now we vizualize the data using a correlation plot matrix
 
-```{r, cormat}
-library(dplyr)
+```{r,plot00}
 library(GGally)
+ggpairs(human)
 library(corrplot)
-ggpairs(human_)
-cor(human_) %>% corrplot
+humancor <- cor(human)
+corrplot(humancor)
 ```
 
+We can see a strong negative correlation between maternal mortality, econdary education ratio and years of expected education
+
+# Principal component analysis (PCA)
+
+```{r, pca}
+pca_human <- prcomp(human)
+s <- summary(pca_human)
+s
+pca_pr <- round(100*s$importance[2,], digits=1)
+pca_pr
+biplot(pca_human, choices = 1:2, cex = c(0.6, 1))
+biplot(pca_human, choices = 1:2, cex = c(0.6, 0.9))
+```
+
+# Multiple correspondance analysis
+
+We will use the dataset tea for this analysis. the data contains 300 observations of 36 variables with information about tea drinking habits
+
+```{r, tea}
+library(FactoMineR)
+data("tea")
+str(tea)
+dim(tea)
+```
+```{r, mca}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+keep_columns <- c("Tea", "How", "how", "sugar", "where", "lunch")
+tea_time <- select(tea, one_of(keep_columns))
+gather(tea_time) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+```
+
+We can see that most people use tea bags, have it alone, not at lunch, early grey and from a chain store. the consumption of sugar its split.
+
+```{r, mca1}
+mca <- MCA(tea_time, graph = FALSE)
+summary(mca)
+plot(mca, invisible = "ind", habillage = "quali")
+plot(mca, invisible = "var", habillage = "quali")
+```
